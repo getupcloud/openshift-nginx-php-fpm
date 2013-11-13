@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
 NGINX_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/nginx.conf
@@ -8,8 +7,16 @@ NGINX_PID_FILE=$OPENSHIFT_PHP_DIR/run/nginx.pid
 PHP_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf
 PHP_PID_FILE=$OPENSHIFT_PHP_DIR/run/php-fpm.pid
 
+function _php-fpm() {
+    if [ "$OPENSHIFT_PHP_VERSION" == '5.3' ]; then
+        php-fpm $@
+    else
+        scl enable php${OPENSHIFT_PHP_VERSION//./} "php-fpm $*"
+    fi
+}
+
 function _start_php() {
-    /usr/sbin/php-fpm -D -y $OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf >> $OPENSHIFT_PHP_LOG_DIR/php_error.log 2>&1
+    _php-fpm -D -y $OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf >> $OPENSHIFT_PHP_LOG_DIR/php_error.log 2>&1
 }
 
 function _start_nginx() {
@@ -43,7 +50,7 @@ function configtest() {
     client_message "Testing Apache *.conf files"
     /usr/sbin/nginx -c $NGINX_CFG_FILE -g "error_log stderr;" -t
     client_message "Testing php-fpm *.conf files"
-    /usr/sbin/php-fpm -F -y $OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf --test
+    _php-fpm -F -y $OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf --test
     return $?
 }
 
