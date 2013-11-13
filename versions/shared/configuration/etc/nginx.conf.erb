@@ -71,6 +71,17 @@ http {
             try_files $uri $uri/ =404;
         }
 
+        # avoid unnecessary log
+        location = /favicon.ico {
+            access_log off;
+            log_not_found off;
+        }
+
+        location = /robots.txt {
+            access_log off;
+            log_not_found off;
+        }
+
         # user-defined config
         include <%= ENV['OPENSHIFT_REPO_DIR'] %>/config/nginx.d/*.conf;
     }
