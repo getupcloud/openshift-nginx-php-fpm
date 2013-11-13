@@ -28,7 +28,7 @@ function _stop_service() {
     if [ -n "$pid" ]; then
         kill $pid
         wait_for_stop $pid
-	if [ -f "$pid" ]; then
+        if [ -f "$pid" ]; then
             rm -f "$1"
         fi
     fi
@@ -37,6 +37,14 @@ function _stop_service() {
 function stop() {
    _stop_service $NGINX_PID_FILE
    _stop_service $PHP_PID_FILE
+}
+
+function configtest() {
+    client_message "Testing Apache *.conf files"
+    /usr/sbin/nginx -c $NGINX_CFG_FILE -g "error_log stderr;" -t
+    client_message "Testing php-fpm *.conf files"
+    /usr/sbin/php-fpm -F -y $OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf --test
+    return $?
 }
 
 function status() {
@@ -58,6 +66,30 @@ function tidy() {
 }
 
 function build() {
+    if [ -f "${OPENSHIFT_REPO_DIR}/.openshift/markers/force_clean_build" ]
+    then
+        echo ".openshift/markers/force_clean_build found!  Recreating pear libs" 1>&2
+        rm -rf "${OPENSHIFT_PHP_DIR}"/phplib/pear/*
+        mkdir -p "${OPENSHIFT_PHP_DIR}"/phplib/pear/{docs,ext,php,cache,cfg,data,download,temp,tests,www}
+    fi
+
+    if [ -f ${OPENSHIFT_REPO_DIR}deplist.txt ]
+    then
+        for f in $(cat ${OPENSHIFT_REPO_DIR}deplist.txt)
+        do
+            echo "Checking pear: $f"
+            echo
+            if pear list "$f" > /dev/null
+            then
+                pear upgrade "$f"
+            elif ! ( php -c "${OPENSHIFT_PHP_DIR}"/conf -m | grep -i -q \^`basename "$f"`\$ )
+            then
+                pear install --alldeps "$f"
+            else
+                echo "Extension already installed in the system: $f"
+            fi
+        done
+    fi
     return 0
 }
 
@@ -66,7 +98,9 @@ case "$1" in
   stop)            stop;;
   restart)         stop; start;;
   status)          status;;
+  configtest)      configtest ;;
   tidy)            tidy;;
+  build)           build;;
   deploy)          exit 0;;
   *)               exit 0
 esac

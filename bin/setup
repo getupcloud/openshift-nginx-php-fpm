@@ -1,6 +1,5 @@
 #!/bin/bash -eu
 
-set -x
 case "$1" in
   -v|--version)
     version="$2"
@@ -18,5 +17,10 @@ fi
 mkdir -p $OPENSHIFT_PHP_DIR/configuration/etc/
 cp -Hr $OPENSHIFT_PHP_DIR/versions/$VERSION_DIR/configuration/etc/* $OPENSHIFT_PHP_DIR/configuration/etc/
 
+# Create additional directories required by PHP
+mkdir -p $OPENSHIFT_PHP_DIR/phplib/pear/{docs,ext,php,cache,cfg,data,download,temp,tests,www}
+mkdir -p $OPENSHIFT_PHP_DIR/{logs,run,tmp,sessions}
+
 # Create additional directories required by nginx
-mkdir -p $OPENSHIFT_PHP_DIR/{logs,run} $TMP/nginx
+mkdir -p $TMP/nginx
+
