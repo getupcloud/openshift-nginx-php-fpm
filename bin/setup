@@ -8,9 +8,9 @@ esac
 # Copy version specific files
 shopt -s dotglob
 
-if [ "$version" == '5.3' ]; then
-  VERSION_DIR=shared
-else
+VERSION_DIR=shared
+
+if [ -d "$OPENSHIFT_PHP_DIR/versions/$version/" ]; then
   VERSION_DIR="$version"
 fi
 
