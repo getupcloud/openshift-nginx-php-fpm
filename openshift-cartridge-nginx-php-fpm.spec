@@ -1,7 +1,7 @@
 %global cartridgedir %{_libexecdir}/openshift/cartridges/nginx-php-fpm
 %global frameworkdir %{_libexecdir}/openshift/cartridges/nginx-php-fpm
 
-Name:          openshift-origin-cartridge-nginx-php-fpm
+Name:          openshift-cartridge-nginx-php-fpm
 Version:       0.0.0.2
 Release:       1%{?dist}
 Summary:       Php-fpm cartridge
