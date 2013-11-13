@@ -30,7 +30,7 @@ http {
     port_in_redirect    off;
 
     gzip                on;
-    #gzip_min_length     1024;
+    gzip_min_length     512;
 
     client_body_temp_path <%= ENV['TMP'] %>/nginx/client_body;
     proxy_temp_path       <%= ENV['TMP'] %>/nginx/prox;
