@@ -20,7 +20,7 @@ function _start_php() {
 }
 
 function _start_nginx() {
-    /usr/sbin/nginx -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;" >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1
+    $OPENSHIFT_PHP_DIR/usr/sbin/nginx -p $OPENSHIFT_PHP_DIR -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;" >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1
 }
 
 function start() {
