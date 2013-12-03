@@ -37,7 +37,7 @@ function _stop_service() {
     if [ -n "$pid" ]; then
         kill $pid
         wait_for_stop $pid
-        if [ -f "$pid" ]; then
+        if [ -f "$1" ]; then
             rm -f "$1"
         fi
     fi
