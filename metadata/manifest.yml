@@ -72,10 +72,10 @@ Scaling:
   Min: 1
   Max: -1
 Endpoints:
-  - Private-IP-Name:   NGINX_IP
-    Private-Port-Name: NGINX_PORT
+  - Private-IP-Name:   IP
+    Private-Port-Name: PORT
     Private-Port:      8080
-    Public-Port-Name:  NGINX_PROXY_PORT
+    Public-Port-Name:  PROXY_PORT
     Mappings:
       - Frontend:      ""
         Backend:       ""
@@ -83,10 +83,9 @@ Endpoints:
       - Frontend:      "/health"
         Backend:       ""
         Options:       { health: true }
-  - Private-IP-Name:   IP
-    Private-Port-Name: PORT
+  - Private-IP-Name:   FPM_IP
+    Private-Port-Name: FPM_PORT
     Private-Port:      9000
-    Public-Port-Name:  PROXY_PORT
 Version-Overrides:
   '5.4':
      Display-Name: PHP 5.4

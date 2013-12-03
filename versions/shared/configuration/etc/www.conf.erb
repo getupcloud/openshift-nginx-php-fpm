@@ -9,7 +9,7 @@
 ;                            specific port;
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
-listen = <%= ENV['OPENSHIFT_PHP_IP'] %>:<%= ENV['OPENSHIFT_PHP_PORT'] %>
+listen = <%= ENV['OPENSHIFT_PHP_FPM_IP'] %>:<%= ENV['OPENSHIFT_PHP_FPM_PORT'] %>
 
 ; Set listen(2) backlog. A value of '-1' means unlimited.
 ; Default Value: -1
@@ -21,7 +21,7 @@ listen = <%= ENV['OPENSHIFT_PHP_IP'] %>:<%= ENV['OPENSHIFT_PHP_PORT'] %>
 ; must be separated by a comma. If this value is left blank, connections will be
 ; accepted from any ip address.
 ; Default Value: any
-listen.allowed_clients = <%= ENV['OPENSHIFT_PHP_IP'] %>
+listen.allowed_clients = <%= ENV['OPENSHIFT_PHP_FPM_IP'] %>
 
 ; Set permissions for unix socket, if one is used. In Linux, read/write
 ; permissions must be set in order to allow connections from a web server. Many
