@@ -66,11 +66,6 @@ http {
             include        fastcgi_params;
         }
 
-       # handle any other URI
-        location / {
-            try_files $uri $uri/ =404;
-        }
-
         # avoid unnecessary log
         location = /favicon.ico {
             access_log off;
