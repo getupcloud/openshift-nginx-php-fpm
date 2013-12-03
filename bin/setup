@@ -1,5 +1,6 @@
 #!/bin/bash -eu
 
+set -x
 case "$1" in
   -v|--version)
     version="$2"
