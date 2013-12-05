@@ -14,9 +14,8 @@ if [ -d "$OPENSHIFT_PHP_DIR/versions/$version/" ]; then
   VERSION_DIR="$version"
 fi
 
-# copy configs
+# create config dir. populate on install
 mkdir -p $OPENSHIFT_PHP_DIR/configuration/etc/
-cp -Hr $OPENSHIFT_PHP_DIR/versions/$VERSION_DIR/configuration/etc/* $OPENSHIFT_PHP_DIR/configuration/etc/
 
 # copy nginx binary
 mkdir -p $OPENSHIFT_PHP_DIR/usr/sbin/

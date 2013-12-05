@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source $OPENSHIFT_PHP_DIR/lib/util
 
 NGINX_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/nginx.conf
 NGINX_PID_FILE=$OPENSHIFT_PHP_DIR/run/nginx.pid
@@ -20,10 +21,17 @@ function _start_php() {
 }
 
 function _start_nginx() {
-    $OPENSHIFT_PHP_DIR/usr/sbin/nginx -p $OPENSHIFT_PHP_DIR -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;" >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1
+
+    if ! $OPENSHIFT_PHP_DIR/usr/sbin/nginx -p $OPENSHIFT_PHP_DIR -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;" \
+        >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1; then
+        echo 1>&2
+        cat $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 1>&2
+        return 1
+    fi
 }
 
 function start() {
+    build_nginx_config && build_phpfpm_config
     _start_php
     _start_nginx
 }

@@ -2,14 +2,22 @@
 locked_files:
 - bin/
 - bin/*
-- configuration/
-- configuration/etc/
-- configuration/etc/*
-- metadata/
-- metadata/*
 - env/
 - env/*
 - hooks/
 - hooks/*
+- lib/
+- lib/*
+- metadata/
+- metadata/*
+- usr/
+- usr/*
+- versions/
+- versions/*
 processed_templates:
-- '**/*.erb'
+- 'bin/**/*.erb'
+- 'env/**/*.erb'
+- 'hooks/**/*.erb'
+- 'lib/**/*.erb'
+- 'metadata/**/*.erb'
+- 'versions/**/*.erb'

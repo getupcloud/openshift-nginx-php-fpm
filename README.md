@@ -18,5 +18,5 @@ $ git push
 
 ## User-defined configuration
 
-Place your nginx .conf files inside config/nginx.d/. It will be include()ed from "server" scope.
+Place your nginx .conf files inside config/nginx.d/. It will be include()ed from "http" scope.
 Place your php-fpm .conf files inside config/php-fpm.d/. It will be include()ed from main php-fpm.conf file.
