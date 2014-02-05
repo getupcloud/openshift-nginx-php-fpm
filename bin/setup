@@ -17,13 +17,9 @@ fi
 # create config dir. populate on install
 mkdir -p $OPENSHIFT_PHP_DIR/configuration/etc/
 
-# copy nginx binary
-mkdir -p $OPENSHIFT_PHP_DIR/usr/sbin/
-cp -Hr $OPENSHIFT_PHP_DIR/versions/$VERSION_DIR/usr/sbin/* $OPENSHIFT_PHP_DIR/usr/sbin/
-
-# setup perl lib
+# setup nginx-1.0.15 perl lib
 for file in nginx.so nginx.pm; do
-  ln -s $OPENSHIFT_PHP_DIR/versions/$VERSION_DIR/usr/lib/perl5/$file $OPENSHIFT_PHP_DIR/$file
+  ln -s $OPENSHIFT_PHP_DIR/versions/nginx-1.0.15/usr/lib/perl5/$file $OPENSHIFT_PHP_DIR/$file
 done
 
 # Create additional directories required by PHP
