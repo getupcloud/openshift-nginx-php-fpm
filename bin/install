@@ -13,6 +13,8 @@ else
   VERSION_DIR="$version"
 fi
 
+export OPENSHIFT_PHP_VERSION="$version"
+
 source ${OPENSHIFT_PHP_DIR}lib/php_context
 
 echo "$version" > "$OPENSHIFT_PHP_DIR/env/OPENSHIFT_PHP_VERSION"
