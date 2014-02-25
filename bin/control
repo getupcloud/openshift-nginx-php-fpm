@@ -2,6 +2,8 @@
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 source $OPENSHIFT_PHP_DIR/lib/util
+source ${OPENSHIFT_PHP_DIR}/lib/php_context
+
 
 NGINX_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/nginx.conf
 NGINX_PID_FILE=$OPENSHIFT_PHP_DIR/run/nginx.pid
@@ -9,11 +11,7 @@ PHP_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf
 PHP_PID_FILE=$OPENSHIFT_PHP_DIR/run/php-fpm.pid
 
 function _php-fpm() {
-    if [ "$OPENSHIFT_PHP_VERSION" == '5.3' ]; then
-        php-fpm $@
-    else
-        scl enable php${OPENSHIFT_PHP_VERSION//./} "php-fpm $*"
-    fi
+    php_context "php-fpm $@"
 }
 
 function _start_php() {
@@ -63,13 +61,12 @@ function configtest() {
 }
 
 function status() {
-   if output=$(curl -XHEAD http://$OPENSHIFT_PHP_NGINX_IP:$OPENSHIFT_PHP_NGINX_PORT/ 2>&1 )
+   if output=$(curl -I http://$OPENSHIFT_PHP_IP:$OPENSHIFT_PHP_PORT/ 2>&1 )
    then
       client_result "Application is running"
-      return 0
    else
       client_result "Application is either stopped or inaccessible"
-      return 1
+      client_result $output
    fi
 }
 
@@ -92,17 +89,16 @@ function build() {
     then
         for f in $(cat ${OPENSHIFT_REPO_DIR}deplist.txt)
         do
-            echo "Checking pear: $f"
-            echo
-            if pear list "$f" > /dev/null
-            then
-                pear upgrade "$f"
-            elif ! ( php -c "${OPENSHIFT_PHP_DIR}"/conf -m | grep -i -q \^`basename "$f"`\$ )
-            then
-                pear install --alldeps "$f"
+          if ! php_context "pear info '$f' >/dev/null"; then
+              php_context "pear install --alldeps '$f'"
             else
-                echo "Extension already installed in the system: $f"
+              php_context "pear upgrade --alldeps '$f'" || :
             fi
+            echo
+            # Remove gear-specific absolute paths from the generated PEAR
+            # files except from the hidden dirs/files (cache, registry etc.)
+            find ${OPENSHIFT_PHP_DIR}phplib/pear/pear/ -type f \( ! -regex '.*/\..*' \) \
+              -exec sed -i "s|${OPENSHIFT_HOMEDIR}|~/|g" {} \;
         done
     fi
     return 0

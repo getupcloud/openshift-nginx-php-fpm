@@ -13,14 +13,18 @@ else
   VERSION_DIR="$version"
 fi
 
+source ${OPENSHIFT_PHP_DIR}lib/php_context
+
 echo "$version" > "$OPENSHIFT_PHP_DIR/env/OPENSHIFT_PHP_VERSION"
 echo "$OPENSHIFT_PHP_DIR/configuration/etc/php.ini" > "$OPENSHIFT_PHP_DIR/env/PHPRC"
 
 # Pear setup
 rm -f $OPENSHIFT_HOMEDIR/.pearrc
-pear config-create "$OPENSHIFT_PHP_DIR"/phplib/pear/ "$OPENSHIFT_HOMEDIR"/.pearrc
-pear -c "$OPENSHIFT_HOMEDIR"/.pearrc config-set php_ini "$OPENSHIFT_PHP_DIR"/configuration/etc/php.ini
-pear -c "$OPENSHIFT_HOMEDIR"/.pearrc config-set auto_discover 1
+php_context "pear config-create ${OPENSHIFT_PHP_DIR}phplib/pear/ ${OPENSHIFT_HOMEDIR}.pearrc"
+php_context "pear -c ${OPENSHIFT_HOMEDIR}.pearrc config-set php_ini ${OPENSHIFT_PHP_DIR}configuration/etc/php.ini"
+php_context "pear -c ${OPENSHIFT_HOMEDIR}.pearrc config-set auto_discover 1"
+
+update_configuration
 
 # build initial config
 cp -Hr $OPENSHIFT_PHP_DIR/versions/$VERSION_DIR/configuration/etc/* $OPENSHIFT_PHP_DIR/configuration/etc/
