@@ -14,7 +14,7 @@ else
 fi
 
 export OPENSHIFT_PHP_VERSION="$version"
-
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
 source ${OPENSHIFT_PHP_DIR}lib/php_context
 
 echo "$version" > "$OPENSHIFT_PHP_DIR/env/OPENSHIFT_PHP_VERSION"
