@@ -11,7 +11,7 @@ PHP_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf
 PHP_PID_FILE=$OPENSHIFT_PHP_DIR/run/php-fpm.pid
 
 function _php-fpm() {
-    php_context "php-fpm $@"
+    php_context "php-fpm $*"
 }
 
 function _start_php() {
