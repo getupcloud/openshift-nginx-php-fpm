@@ -17,6 +17,8 @@ server {
         fastcgi_param  SCRIPT_FILENAME   $document_root$fastcgi_script_name;
         include        fastcgi_params;
         include        openshift_params;
+        # uncomment to export all environment variables to fastcgi
+        #include        <%= ENV['OPENSHIFT_REPO_DIR'] %>/config/nginx.d/export_env;
     }
 
     # site root is served by /index.php
@@ -26,6 +28,8 @@ server {
         fastcgi_param  SCRIPT_FILENAME   $document_root/index.php;
         include        fastcgi_params;
         include        openshift_params;
+        # uncomment to export all environment variables to fastcgi
+        #include        <%= ENV['OPENSHIFT_REPO_DIR'] %>/config/nginx.d/export_env;
     }
 
     # avoid unnecessary log
