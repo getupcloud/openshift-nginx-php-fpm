@@ -10,6 +10,10 @@ NGINX_PID_FILE=$OPENSHIFT_PHP_DIR/run/nginx.pid
 PHP_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/php-fpm.conf
 PHP_PID_FILE=$OPENSHIFT_PHP_DIR/run/php-fpm.pid
 
+function _nginx() {
+    LD_LIBRARY_PATH=$OPENSHIFT_PHP_DIR $OPENSHIFT_PHP_DIR/usr/sbin/nginx "$@" >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1
+}
+
 function _php-fpm() {
     php_context "php-fpm $*"
 }
@@ -20,8 +24,7 @@ function _start_php() {
 
 function _start_nginx() {
 
-    if ! $OPENSHIFT_PHP_DIR/usr/sbin/nginx -p $OPENSHIFT_PHP_DIR -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;" \
-        >> $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 2>&1; then
+    if ! _nginx -p $OPENSHIFT_PHP_DIR -c $NGINX_CFG_FILE -g "error_log $OPENSHIFT_PHP_LOG_DIR/nginx_error.log;"; then
         echo 1>&2
         cat $OPENSHIFT_PHP_LOG_DIR/nginx_error.log 1>&2
         return 1
