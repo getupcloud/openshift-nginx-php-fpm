@@ -4,6 +4,9 @@ source $OPENSHIFT_CARTRIDGE_SDK_BASH
 source $OPENSHIFT_PHP_DIR/lib/util
 source ${OPENSHIFT_PHP_DIR}/lib/php_context
 
+if [ "${NGINX_PHP_FPM_DEBUG}" == "1" ]; then
+    set -x
+fi
 
 NGINX_CFG_FILE=$OPENSHIFT_PHP_DIR/configuration/etc/nginx.conf
 NGINX_PID_FILE=$OPENSHIFT_PHP_DIR/run/nginx.pid
